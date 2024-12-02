@@ -13,7 +13,25 @@ export async function getTodos(idToken) {
     }
   )
   console.log('Todos:', response.data)
-  return response.data.items
+  return response.data.items.map((item) => {
+    const commonResponse = {
+      todoId: item.todoId.S,
+      name: item.name.S,
+      dueDate: item.dueDate.S,
+      done: item.done.BOOL,
+      createdAt: item.createdAt.S,
+      userId: item.userId.S
+    }
+
+    if (item.attachmentUrl) {
+      return {
+        ...commonResponse,
+        attachmentUrl: item.attachmentUrl.S
+      }
+    } else {
+      return commonResponse
+    }
+  })
 }
 
 export async function createTodo(idToken, newTodo) {
